@@ -12,11 +12,11 @@ PKGS=(base-devel git patch gettext-devel
   $P-toolchain $P-python $P-pkgconf $P-yasm $P-nasm
   $P-boost $P-glib2 $P-glibmm $P-cairo $P-cairomm $P-pango $P-pangomm $P-atk $P-gdk-pixbuf2
   $P-libsndfile $P-libsamplerate $P-libxml2 $P-libxslt $P-curl $P-liblo $P-aubio
-  $P-fftw $P-fftw $P-taglib $P-rubberband $P-libarchive $P-libusb $P-hidapi
+  $P-fftw $P-taglib $P-rubberband $P-libarchive $P-libusb $P-hidapi
   $P-lv2 $P-serd $P-sord $P-sratom $P-lilv $P-suil $P-portaudio $P-flac $P-libogg
   $P-libvorbis $P-opus $P-readline $P-cppunit $P-dlfcn $P-libwebsockets $P-nsis $P-drmingw)
 
-deps() { pacman -Syu --noconfirm --needed || true; pacman -S --noconfirm --needed "${PKGS[@]}"; }
+deps() { pacman -Sy --noconfirm && pacman -S --noconfirm --needed "${PKGS[@]}"; }
 
 configure() {
   local o="-Og"; [ "$OPT" = 1 ] && o="-O2"
