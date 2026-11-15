@@ -30,8 +30,22 @@ configure() {
 build() { python waf -j"$JOBS"; }
 package() {
   python waf install
-  mkdir -p build/win-bundle && cp -a build/win-prefix/. build/win-bundle/
-  echo "Staged in build/win-bundle (add MinGW runtime DLLs: ldd the ardour exe)."
+  local B=build/win-bundle L=build/win-bundle/lib/ardour9
+  mkdir -p "$B"; find "$B" -mindepth 1 -delete; cp -a build/win-prefix/. "$B/"; rm -f "$B/bin/ardour9"  # sh launcher is prefix-bound
+  # bundle every MSYS2/UCRT64 runtime DLL reachable from our binaries (iterate to closure)
+  local n=-1 m
+  while :; do
+    find "$B" \( -name '*.exe' -o -name '*.dll' \) -print0 | xargs -0 ldd 2>/dev/null       | awk '/=> \/ucrt64\//{print $3}' | sort -u | while read -r d; do
+          [ -e "$L/$(basename "$d")" ] || cp "$d" "$L/"; done
+    m=$(ls "$L" | wc -l); [ "$m" = "$n" ] && break; n=$m
+  done
+  # GTK2 runtime data: pixbuf loaders + their cache, themes/engines
+  mkdir -p "$B/lib"; cp -a /ucrt64/lib/gdk-pixbuf-2.0 "$B/lib/" 2>/dev/null || true
+  cp -a /ucrt64/lib/gtk-2.0 "$B/lib/" 2>/dev/null || true
+  mkdir -p "$B/share"; cp -a /ucrt64/share/glib-2.0 "$B/share/" 2>/dev/null || true
+  local X; X=$(cd "$L" && ls ardour-[0-9]*.exe | head -1)
+  sed "s/ardour-9\.10\.23\.exe/$X/" scripts/win/ardour.cmd > "$B/ardour.cmd"
+  echo "Bundle: $B  (run ardour.cmd; $(ls "$L"/*.dll | wc -l) DLLs in lib/ardour9)"
 }
 clean() { python waf distclean || true; rm -rf build/win-prefix build/win-bundle; }
 
