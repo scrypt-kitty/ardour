@@ -440,7 +440,7 @@ canonical_path (const std::string& path)
 
 	if (_wfullpath (resolved_wpath, wfilepath, _MAX_PATH) == NULL) {
 		DEBUG_TRACE (DEBUG::FileUtils,
-		             string_compose ("PBD::canonical_path: Unable to resolve %1\n", wfilepath));
+		             string_compose ("PBD::canonical_path: Unable to resolve %1\n", path));
 		return path;
 	}
 
@@ -451,7 +451,7 @@ canonical_path (const std::string& path)
 		DEBUG_TRACE (
 		    DEBUG::FileUtils,
 		    string_compose ("PBD::canonical_path: Unable to convert path from utf16 to utf8 : %1\n",
-		                    resolved_wpath));
+		                    path));
 		return path;
 	}
 

@@ -24,7 +24,7 @@ configure() {
   CFLAGS="-mstackrealign $o" CXXFLAGS="-mstackrealign $o" \
   python waf configure --dist-target=mingw --keepflags \
     --with-backends=dummy,portaudio --no-dr-mingw --no-phone-home \
-    --check-c-compiler=gcc --check-cxx-compiler=g++ \
+    --cxx17 --windows-key=Super --check-c-compiler=gcc --check-cxx-compiler=g++ \
     --prefix="$PWD/build/win-prefix" ${ARDOUR_CFG:-}
 }
 build() { python waf -j"$JOBS"; }
