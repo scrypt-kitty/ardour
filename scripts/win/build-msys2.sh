@@ -19,12 +19,12 @@ PKGS=(base-devel git patch gettext-devel
 deps() { pacman -Sy --noconfirm && pacman -S --noconfirm --needed "${PKGS[@]}"; }
 
 configure() {
-  local o="-Og"; [ "$OPT" = 1 ] && o="-O2"
+  local o="-Og" mode=""; [ "$OPT" = 1 ] && { o="-O2"; mode="--optimize"; }
   export CC="$(cygpath -m "$(command -v gcc)")" CXX="$(cygpath -m "$(command -v g++)")"
   CFLAGS="-mstackrealign $o" CXXFLAGS="-mstackrealign $o" \
   python waf configure --dist-target=mingw --keepflags \
     --with-backends=dummy,portaudio --no-dr-mingw --no-phone-home \
-    --cxx17 --windows-key=Super --check-c-compiler=gcc --check-cxx-compiler=g++ \
+    --cxx17 $mode --windows-key=Super --check-c-compiler=gcc --check-cxx-compiler=g++ \
     --prefix="$PWD/build/win-prefix" ${ARDOUR_CFG:-}
 }
 build() { python waf -j"$JOBS"; }
