@@ -1,6 +1,6 @@
 #!/bin/bash
 # Native Windows build of Ardour in an MSYS2 UCRT64 shell (unofficial path; upstream
-# cross-compiles from Linux). Usage: build-msys2.sh [all|deps|configure|build|package|clean]
+# cross-compiles from Linux). Usage: build-msys2.sh [all|deps|configure|build|package|installer|clean]
 set -euo pipefail
 cd "$(dirname "$0")/../.."
 test -f gtk2_ardour/wscript || { echo "run from an Ardour checkout"; exit 1; }
@@ -48,9 +48,16 @@ package() {
   sed "s/ardour-9\.10\.23\.exe/$X/" scripts/win/ardour.cmd > "$B/ardour.cmd"
   echo "Bundle: $B  (run ardour.cmd; $(ls "$L"/*.dll | wc -l) DLLs in lib/ardour9)"
 }
+installer() {
+  [ -f build/win-bundle/ardour.cmd ] || package
+  local X V; X=$(cd build/win-bundle/lib/ardour9 && ls ardour-[0-9]*.exe | head -1); V=${X#ardour-}; V=${V%.exe}
+  local out="build/Ardour-$V-win64-setup.exe"
+  makensis -V2 -DVERSION="$V" -DBUNDLE="$(cygpath -w "$PWD/build/win-bundle")"     -DICON="$(cygpath -w "$PWD/gtk2_ardour/icons/Ardour.ico")" -DLICENSE="$(cygpath -w "$PWD/COPYING")"     -DNSISINC="$(cygpath -w "$PWD/tools/x-win/nsis")" -DOUTFILE="$(cygpath -w "$PWD/$out")"     scripts/win/ardour.nsi
+  echo "Installer: $out ($(du -h "$out" | cut -f1))"
+}
 clean() { python waf distclean || true; rm -rf build/win-prefix build/win-bundle; }
 
 case $ACTION in
-  deps) deps;; configure) configure;; build) build;; package) package;; clean) clean;;
+  deps) deps;; configure) configure;; build) build;; package) package;; installer) installer;; clean) clean;;
   all) deps; configure; build;;
 esac

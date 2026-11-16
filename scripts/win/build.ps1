@@ -5,7 +5,7 @@
    -Action deps|configure|build|package|clean   -Jobs N   -Optimize
 #>
 param(
-    [ValidateSet('all','deps','configure','build','package','clean')][string]$Action = 'all',
+    [ValidateSet('all','deps','configure','build','package','installer','clean')][string]$Action = 'all',
     [int]$Jobs = [Environment]::ProcessorCount,
     [switch]$Optimize
 )
