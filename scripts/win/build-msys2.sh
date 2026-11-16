@@ -29,6 +29,7 @@ configure() {
 }
 build() { python waf -j"$JOBS"; }
 package() {
+  mkdir -p build/win-prefix; find build/win-prefix -mindepth 1 -delete  # no stale exes from older versions
   python waf install
   local B=build/win-bundle L=build/win-bundle/lib/ardour9
   mkdir -p "$B"; find "$B" -mindepth 1 -delete; cp -a build/win-prefix/. "$B/"; rm -f "$B/bin/ardour9"  # sh launcher is prefix-bound
