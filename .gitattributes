@@ -2,3 +2,5 @@
 /README-GITHUB.txt -export-ignore
 scripts/win/*.sh text eol=lf
 scripts/win/*.cmd text eol=crlf
+scripts/linux/*.sh text eol=lf
+scripts/macos/*.sh text eol=lf
