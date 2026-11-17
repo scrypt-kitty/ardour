@@ -16,7 +16,7 @@ PKGS=(build-essential git python3 pkg-config gettext itstool yasm
   libxml2-dev libxslt1-dev libcurl4-openssl-dev libarchive-dev liblo-dev libtag1-dev
   libaubio-dev librubberband-dev libfftw3-dev libusb-1.0-0-dev libudev-dev libreadline-dev
   libserd-dev libsord-dev libsratom-dev liblilv-dev lv2-dev liblrdf0-dev vamp-plugin-sdk
-  libwebsockets-dev libfontconfig1-dev libx11-dev libxext-dev libxrandr-dev libxcursor-dev
+  libwebsockets-dev libfontconfig1-dev libx11-dev libxext-dev libxinerama-dev libxi-dev libxrandr-dev libxcursor-dev
   libcppunit-dev libgnutls28-dev libdbus-1-dev)
 
 deps() {
