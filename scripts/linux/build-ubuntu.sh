@@ -29,12 +29,12 @@ deps() {
 configure() {
   local o="" mode="--debug"; [ "$OPT" = 1 ] && { o="-O2"; mode="--optimize"; }
   git describe --tags >/dev/null 2>&1 || { echo "no git tags: run 'git fetch --tags' (Ardour derives its version from git describe)"; exit 1; }
-  CFLAGS="$o" CXXFLAGS="$o" ./waf configure --cxx17 $mode --with-backends="$BACKENDS" \
+  CFLAGS="$o" CXXFLAGS="$o" python3 waf configure --cxx17 $mode --with-backends="$BACKENDS" \
     --no-phone-home --freedesktop --prefix="$PREFIX" ${ARDOUR_CFG:-}
 }
-build()   { ./waf -j"$JOBS"; }
-package() { ./waf install; echo "Installed to $PREFIX; run $PREFIX/bin/ardour9"; }
-clean()   { ./waf distclean || true; rm -rf "$PREFIX"; }
+build()   { python3 waf -j"$JOBS"; }
+package() { python3 waf install; echo "Installed to $PREFIX; run $PREFIX/bin/ardour9"; }
+clean()   { python3 waf distclean || true; rm -rf "$PREFIX"; }
 
 case $ACTION in
   deps) deps;; configure) configure;; build) build;; package) package;; clean) clean;;

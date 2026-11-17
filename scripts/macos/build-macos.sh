@@ -37,16 +37,16 @@ configure() {
   export PKG_CONFIG_PATH="$(pkgpath)"
   export PATH="$HB/opt/gettext/bin:$PATH"
   CFLAGS="$o -I$HB/include" CXXFLAGS="$o -I$HB/include" LDFLAGS="-L$HB/lib" \
-  ./waf configure --cxx17 $mode --arm64 --with-backends=coreaudio,dummy --no-phone-home \
+  python3 waf configure --cxx17 $mode --arm64 --with-backends=coreaudio,dummy --no-phone-home \
     --also-include="$HB/include" --prefix="$PREFIX" ${ARDOUR_CFG:-}
 }
-build()   { export PKG_CONFIG_PATH="$(pkgpath)"; ./waf -j"$JOBS"; }
+build()   { export PKG_CONFIG_PATH="$(pkgpath)"; python3 waf -j"$JOBS"; }
 package() {
-  ./waf install
+  python3 waf install
   echo "Installed to $PREFIX. A signed/notarized .app + dmg needs tools/osx_packaging and Ardour's own"
   echo "dependency stack (not Homebrew); this script stops at a runnable prefix."
 }
-clean()   { ./waf distclean || true; rm -rf "$PREFIX"; }
+clean()   { python3 waf distclean || true; rm -rf "$PREFIX"; }
 
 case $ACTION in
   deps) deps;; configure) configure;; build) build;; package) package;; clean) clean;;
