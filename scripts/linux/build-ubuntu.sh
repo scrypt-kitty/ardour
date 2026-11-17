@@ -21,8 +21,9 @@ PKGS=(build-essential git python3 pkg-config gettext itstool yasm
 
 deps() {
   local sudo=""; [ "$(id -u)" = 0 ] || sudo=sudo
-  $sudo apt-get update
-  $sudo env DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends "${PKGS[@]}"
+  local apt="apt-get -o DPkg::Lock::Timeout=900"
+  $sudo $apt update
+  $sudo env DEBIAN_FRONTEND=noninteractive $apt install -y --no-install-recommends "${PKGS[@]}"
 }
 
 configure() {
